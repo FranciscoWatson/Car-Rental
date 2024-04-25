@@ -1,10 +1,22 @@
+using Car_Rental;
+using Car_Rental.Configurations;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<DbConfig>(builder.Configuration.GetSection("ConnectionStrings"));
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-var app = builder.Build();
+builder.Services.AddDbContext<CarRentalDbContext>((serviceProvider, options) =>
+{
+    var dbConfig = serviceProvider.GetRequiredService<IOptions<DbConfig>>().Value;
+    options.UseSqlServer(dbConfig.SqlServerConnection);
+});
 
+var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
