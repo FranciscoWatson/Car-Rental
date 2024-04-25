@@ -1,5 +1,6 @@
 using Car_Rental;
 using Car_Rental.Configurations;
+using Car_Rental.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -15,6 +16,11 @@ builder.Services.AddDbContext<CarRentalDbContext>((serviceProvider, options) =>
     var dbConfig = serviceProvider.GetRequiredService<IOptions<DbConfig>>().Value;
     options.UseSqlServer(dbConfig.SqlServerConnection);
 });
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ILocationRepository, LocationRepository>();
+builder.Services.AddScoped<ICarRepository, CarRepository>();
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
