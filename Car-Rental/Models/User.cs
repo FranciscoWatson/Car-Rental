@@ -5,11 +5,14 @@ namespace Car_Rental.Models;
 
 public class User
 {
-    public string UserId { get; set; }
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int UserId { get; set; }
 
-    [MaxLength(50)] public string FirstName { get; set; }
+    [MaxLength(50)] 
+    public string FirstName { get; set; }
 
-    [MaxLength(50)] public string LastName { get; set; }
+    [MaxLength(50)] 
+    public string LastName { get; set; }
 
     [MaxLength(255)]
     [Column(TypeName = "varchar(255)")]
