@@ -19,8 +19,6 @@ public class Car
     [MaxLength(50)] 
     public string LicensePlate { get; set; }
     
-    public bool Available { get; set; }
-    
     public List<Reservation> Reservations { get; set; }
     
     
