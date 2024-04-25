@@ -41,4 +41,6 @@ public class User
     
     [MaxLength(50)]
     public string LicenseNumber { get; set; }
+    
+    public List<Reservation> Reservations { get; set; }
 }
