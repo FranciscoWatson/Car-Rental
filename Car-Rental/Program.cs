@@ -9,7 +9,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<DbConfig>(builder.Configuration.GetSection("ConnectionStrings"));
 
 // Add services to the container.
+builder.Services.AddAuthentication("MyCookieAuth").AddCookie("MyCookieAuth", options =>
+{
+    options.Cookie.Name = "MyCookieAuth";
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+});
+
 builder.Services.AddRazorPages();
+    
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
 builder.Services.AddDbContext<CarRentalDbContext>((serviceProvider, options) =>
 {
@@ -36,6 +48,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();

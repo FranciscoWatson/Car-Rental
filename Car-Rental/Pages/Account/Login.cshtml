@@ -1,0 +1,16 @@
+﻿@page
+@model Car_Rental.Pages.SignInModel
+@section Styles {
+    <link rel="stylesheet" href="~/css/login.css">
+}
+
+<div class="container">
+    <form method="post" class="form-signin">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <label asp-for="Input.Email" class="sr-only">Email address</label>
+        <input type="email" asp-for="Input.Email" class="form-control" placeholder="Email address" required autofocus>
+        <label asp-for="Input.Password" class="sr-only">Password</label>
+        <input type="password" asp-for="Input.Password" class="form-control" placeholder="Password" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+</div>
