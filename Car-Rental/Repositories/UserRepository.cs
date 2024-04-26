@@ -1,4 +1,6 @@
-﻿using Car_Rental.Models;
+﻿using System.Security.Cryptography;
+using System.Text;
+using Car_Rental.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Car_Rental.Repositories;
@@ -24,6 +26,7 @@ public class UserRepository : IUserRepository
 
     public async Task CreateUserAsync(User user)
     {
+        user.Password = HashPassword(user.Password);
         await _carRentalDbContext.Users.AddAsync(user);
         await _carRentalDbContext.SaveChangesAsync();
     }
@@ -42,5 +45,18 @@ public class UserRepository : IUserRepository
             _carRentalDbContext.Users.Remove(user);
             await _carRentalDbContext.SaveChangesAsync();
         }
+    }
+    
+    public async Task<User?> Get(string email, string password)
+    {
+        var hashedPassword = HashPassword(password);
+        return await Task.FromResult(_carRentalDbContext.Users.FirstOrDefault(u => u.Email == email && u.Password == hashedPassword));
+    }
+
+    private static string HashPassword(string password)
+    {
+        using var sha256 = SHA256.Create();
+        var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+        return BitConverter.ToString(hashedBytes).Replace("-", "").ToLowerInvariant();
     }
 }
