@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using Car_Rental.DTOs;
-using Car_Rental.Models;
+using Car_Rental.Enums;
 using Car_Rental.Pages.InputModels;
-using Car_Rental.Repositories;
 using Car_Rental.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,10 +32,37 @@ public class MainPage : PageModel
         {
             return Page();
         }
+
+        if (Input.StartDate > Input.EndDate)
+        {
+            ModelState.AddModelError(string.Empty, "End date cannot be earlier than start date.");
+            return Page();
+        }
         
-        AvailableCars = await _carService.GetAvailableCarsAsync(Input.City, Input.Country, Input.Date);
-        
+        AvailableCars = await _carService.GetAvailableCarsAsync(Input.City, Input.Country, Input.StartDate, Input.EndDate);
+
         return Page();
+    }
+    public async Task<IActionResult> OnPostReserveAsync(int carId, DateTime startDate, DateTime endDate)
+    {
+        var reservationDto = new ReservationForCreationDto()
+        {
+            CarId = carId,
+            UserId = GetCurrentUserId(),
+            StartDate = startDate,
+            EndDate = endDate,
+            ReservationStatus = ReservationStatus.Reserved
+        };
+
+        await _carService.ReserveCarAsync(reservationDto);
+        
+        return RedirectToPage();
+    }
+
+    private int GetCurrentUserId()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        return int.Parse(userId ?? throw new InvalidOperationException("User ID not found in claims."));
     }
     
 }
