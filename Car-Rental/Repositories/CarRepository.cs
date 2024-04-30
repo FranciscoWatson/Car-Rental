@@ -43,4 +43,20 @@ public class CarRepository : ICarRepository
             await _carRentalDbContext.SaveChangesAsync();
         }
     }
+    
+    public async Task<IEnumerable<Car>> GetAvailableCarsAsync(string city, string country, DateTime? date = null)
+    {
+        date ??= DateTime.Now;
+
+        var cars = await _carRentalDbContext.Cars
+            .Where(car => car.Location.City == city && car.Location.Country == country)
+            .Where(car => !_carRentalDbContext.Reservations.Any(
+                reservation => reservation.CarId == car.CarId &&
+                               reservation.StartDate <= date.Value &&
+                               reservation.EndDate > date.Value))
+            .Include(car => car.Location)
+            .ToListAsync();
+        
+        return cars;
+    }
 }
