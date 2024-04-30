@@ -9,4 +9,5 @@ public interface IReservationRepository
     Task CreateReservationAsync(Reservation reservation);
     Task UpdateReservationAsync(Reservation reservation);
     Task DeleteReservationAsync(int id);
+    Task<DateTime?> GetNextAvailableDateAsync(int carId, DateTime? date);
 }
