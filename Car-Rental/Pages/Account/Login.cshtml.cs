@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Car_Rental.Models;
 using Car_Rental.Pages.InputModels;
 using Car_Rental.Repositories;
 using Microsoft.AspNetCore.Authentication;
@@ -28,9 +29,9 @@ public class SignInModel : PageModel
         }
 
 
-        bool isAuthenticated = await CheckCredentials(Input.Email, Input.Password);
+        var user = await CheckCredentials(Input.Email, Input.Password);
 
-        if (!isAuthenticated)
+        if (user == null)
         {
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             return Page();
@@ -38,9 +39,9 @@ public class SignInModel : PageModel
         
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, Input.Email),
-            new Claim(ClaimTypes.Email, Input.Email)
-            
+            new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
         };
         var identity = new ClaimsIdentity(claims, "MyCookieAuth");
         var principal = new ClaimsPrincipal(identity);
@@ -50,13 +51,9 @@ public class SignInModel : PageModel
         return RedirectToPage("/Index");
     }
 
-    private async Task<bool> CheckCredentials(string email, string password)
+    private async Task<User?> CheckCredentials(string email, string password)
     {
         var user = await _userRepository.Get(email, password);
-        if (user == null)
-        {
-            return false;
-        }
-        return true;
+        return user;
     }
 }
