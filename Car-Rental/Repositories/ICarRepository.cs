@@ -10,5 +10,5 @@ public interface ICarRepository
     Task CreateCarAsync(Car car);
     Task UpdateCarAsync(Car car);
     Task DeleteCarAsync(int carId);
-    Task<IEnumerable<Car>> GetAvailableCarsAsync(string city, string country, DateTime? date = null);
+    Task<IEnumerable<Car>> GetAvailableCarsAsync(string city, string country, DateTime startDate, DateTime endDate);
 }
