@@ -44,16 +44,4 @@ public class ReservationRepository : IReservationRepository
         }
     }
     
-    public async Task<DateTime?> GetNextAvailableDateAsync(int carId, DateTime? date)
-    {
-        date ??= DateTime.Now;
-        
-        var nextAvailableDate = await _carRentalDbContext.Reservations
-            .Where(r => r.CarId == carId && r.StartDate > date)
-            .OrderBy(r => r.StartDate)
-            .Select(r => r.StartDate)
-            .FirstOrDefaultAsync();
-        
-        return nextAvailableDate;
-    }
 }
