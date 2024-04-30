@@ -1,4 +1,5 @@
 ﻿using Car_Rental.DTOs;
+using Car_Rental.Models;
 using Car_Rental.Repositories;
 
 namespace Car_Rental.Services;
@@ -14,14 +15,13 @@ public class CarService : ICarService
         _reservationRepository = reservationRepository;
     }
 
-    public async Task<IEnumerable<CarDto>> GetAvailableCarsAsync(string city, string country, DateTime? date)
+    public async Task<IEnumerable<CarDto>> GetAvailableCarsAsync(string city, string country, DateTime startDate, DateTime endDate)
     {
-        var cars = await _carRepository.GetAvailableCarsAsync(city, country, date);
+        var cars = await _carRepository.GetAvailableCarsAsync(city, country, startDate, endDate);
         var carDtos = new List<CarDto>();
         
         foreach (var car in cars)
         {
-            var nextAvailableDate = await _reservationRepository.GetNextAvailableDateAsync(car.CarId, date);
             carDtos.Add(new CarDto
             {
                 CarId = car.CarId,
@@ -29,11 +29,24 @@ public class CarService : ICarService
                 Model = car.Model,
                 Year = car.Year,
                 LocationCity = car.Location.City,
-                LocationCountry = car.Location.Country,
-                NextAvailableDate = nextAvailableDate
+                LocationCountry = car.Location.Country
             });
         }
 
         return carDtos;
+    }
+    
+    public async Task ReserveCarAsync(ReservationForCreationDto reservationDto)
+    {
+        var reservation = new Reservation
+        {
+            CarId = reservationDto.CarId,
+            UserId = reservationDto.UserId,
+            StartDate = reservationDto.StartDate,
+            EndDate = reservationDto.EndDate,
+            ReservationStatus = reservationDto.ReservationStatus
+        };
+
+        await _reservationRepository.CreateReservationAsync(reservation);
     }
 }
