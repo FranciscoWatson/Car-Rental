@@ -11,5 +11,7 @@ public class MainPageInputModel
     public string Country { get; set; } = string.Empty;
 
     [DataType(DataType.Date)]
-    public DateTime? Date { get; set; }
+    public DateTime StartDate { get; set; }
+    [DataType(DataType.Date)]
+    public DateTime EndDate { get; set; }
 }
