@@ -44,4 +44,14 @@ public class ReservationRepository : IReservationRepository
         }
     }
     
+    public async Task<IEnumerable<Reservation>> GetAllReservationsFromUserAsync(int userId)
+    {
+        return await _carRentalDbContext.Reservations
+            .Where(r => r.UserId == userId)  // Fetching all active reservations
+            .Include(r => r.Car)
+            .ThenInclude(c => c.Location)
+            .ToListAsync();
+    }
+
+    
 }
