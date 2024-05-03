@@ -1,23 +1,28 @@
 ﻿@model Car_Rental.Pages.MainPage
 
-@if (Model.AvailableCars != null && Model.AvailableCars.Any())
-{
+<div class="available-cars">
     <h3>Available Cars:</h3>
-    <ul>
-        @foreach (var car in Model.AvailableCars)
-        {
-            <li>
-                @car.Model - @car.Make @car.Year - @car.LocationCity - @car.LocationCountry
-                <form method="post" asp-page-handler="Reserve" asp-route-carId="@car.CarId">
-                    <input type="hidden" name="startDate" value="@Model.Input.StartDate.ToString("yyyy-MM-dd")" />
-                    <input type="hidden" name="endDate" value="@Model.Input.EndDate.ToString("yyyy-MM-dd")" />
-                    <button type="submit" class="btn btn-success">Reserve</button>
-                </form>
-            </li>
-        }
-    </ul>
-}
-else if (Model.AvailableCars != null)
-{
-    <p>No cars available based on your search criteria.</p>
-}
+    @if (Model.AvailableCars != null && Model.AvailableCars.Any())
+    {
+        <div class="list-group">
+            @foreach (var car in Model.AvailableCars)
+            {
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>@car.Model - @car.Make @car.Year</strong>
+                        <span>@car.LocationCity, @car.LocationCountry</span>
+                    </div>
+                    <form method="post" asp-page-handler="Reserve" asp-route-carId="@car.CarId" class="ml-auto">
+                        <input type="hidden" name="startDate" value="@Model.Input.StartDate.ToString("yyyy-MM-dd")" />
+                        <input type="hidden" name="endDate" value="@Model.Input.EndDate.ToString("yyyy-MM-dd")" />
+                        <button type="submit" class="btn btn-success">Reserve</button>
+                    </form>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>No cars available based on your search criteria.</p>
+    }
+</div>

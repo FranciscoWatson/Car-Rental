@@ -1,20 +1,24 @@
 ﻿@model Car_Rental.Pages.MainPage
 
-<h3>Your Active Reservations:</h3>
-@if (Model.ActiveReservations != null && Model.ActiveReservations.Any())
-{
-    <ul>
-        @foreach (var reservation in Model.ActiveReservations)
-        {
-            <li>
-                Reservation for @reservation.CarModel at @reservation.Location from 
-                @reservation.StartDate.ToShortDateString() to @reservation.EndDate.ToShortDateString() 
-                - Status: @reservation.Status
-            </li>
-        }
-    </ul>
-}
-else
-{
-    <p>You have no active reservations.</p>
-}
+<div class="mt-4">
+    <h3>Your Reservations:</h3>
+    @if (Model.ActiveReservations != null && Model.ActiveReservations.Any())
+    {
+        <div class="list-group">
+            @foreach (var reservation in Model.ActiveReservations)
+            {
+                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">@reservation.CarModel - @reservation.Location</h5>
+                        <small>@reservation.Status</small>
+                    </div>
+                    <p class="mb-1">From @reservation.StartDate.ToShortDateString() to @reservation.EndDate.ToShortDateString()</p>
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <p>You have no active reservations.</p>
+    }
+</div>
