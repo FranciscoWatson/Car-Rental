@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Car_Rental.DTOs;
+using Car_Rental.DTOs.CarDTOs;
+using Car_Rental.DTOs.ReservationDTOs;
 using Car_Rental.Enums;
 using Car_Rental.Pages.InputModels;
 using Car_Rental.Services;
@@ -25,7 +27,12 @@ public class MainPage : PageModel
     public MainPageInputModel Input { get; set; }
     
     public IEnumerable<CarDto> AvailableCars { get; set; }
+    public IEnumerable<ReservationDto> ActiveReservations { get; set; }
 
+    public async Task OnGetAsync()
+    {
+        ActiveReservations = await _carService.GetReservationsFromUserAsync(GetCurrentUserId());
+    }
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
