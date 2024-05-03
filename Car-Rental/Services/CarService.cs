@@ -1,4 +1,6 @@
 ﻿using Car_Rental.DTOs;
+using Car_Rental.DTOs.CarDTOs;
+using Car_Rental.DTOs.ReservationDTOs;
 using Car_Rental.Models;
 using Car_Rental.Repositories;
 
@@ -48,5 +50,19 @@ public class CarService : ICarService
         };
 
         await _reservationRepository.CreateReservationAsync(reservation);
+    }
+    
+    public async Task<IEnumerable<ReservationDto>> GetReservationsFromUserAsync(int userId)
+    {
+        var reservations = await _reservationRepository.GetAllReservationsFromUserAsync(userId);
+        return reservations.Select(r => new ReservationDto
+        {
+            ReservationId = r.ReservationId,
+            CarModel = $"{r.Car.Make}, {r.Car.Model}",
+            Location = $"{r.Car.Location.City}, {r.Car.Location.Country}",
+            StartDate = r.StartDate,
+            EndDate = r.EndDate,
+            Status = r.ReservationStatus.ToString()
+        }).ToList();
     }
 }
