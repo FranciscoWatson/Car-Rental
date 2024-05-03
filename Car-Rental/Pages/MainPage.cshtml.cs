@@ -46,6 +46,8 @@ public class MainPage : PageModel
         }
         
         AvailableCars = await _carService.GetAvailableCarsAsync(Input.City, Input.Country, Input.StartDate, Input.EndDate);
+        ActiveReservations = await _carService.GetReservationsFromUserAsync(GetCurrentUserId());
+
 
         return Page();
     }
@@ -61,7 +63,8 @@ public class MainPage : PageModel
         };
 
         await _carService.ReserveCarAsync(reservationDto);
-        
+        ActiveReservations = await _carService.GetReservationsFromUserAsync(GetCurrentUserId());
+
         return RedirectToPage();
     }
 

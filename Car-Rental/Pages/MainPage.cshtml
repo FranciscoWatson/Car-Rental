@@ -3,6 +3,18 @@
 
 <h2>Car Rental Dashboard</h2>
 
-<partial name="Shared/_MakeAReservationPartial" model="@Model" />
-
-<partial name="Shared/_ManageReservationsPartial" model="@Model" />
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <partial name="Shared/_MakeAReservationPartial" model="@Model" />
+        </div>
+        <div class="col-md-6">
+            <partial name="Shared/_AvailableCarsPartial" model="@Model" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <partial name="Shared/_ManageReservationsPartial" model="@Model" />
+        </div>
+    </div>  
+</div>
