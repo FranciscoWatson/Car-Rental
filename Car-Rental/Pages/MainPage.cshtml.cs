@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Car_Rental.DTOs;
 using Car_Rental.DTOs.CarDTOs;
 using Car_Rental.DTOs.ReservationDTOs;

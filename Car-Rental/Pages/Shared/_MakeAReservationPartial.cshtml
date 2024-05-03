@@ -1,0 +1,55 @@
+﻿@model Car_Rental.Pages.MainPage
+
+<h2>Make a Reservation</h2>
+
+<form method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Input.City">City:</label>
+        <input asp-for="Input.City" class="form-control" placeholder="Enter city" />
+        <span asp-validation-for="Input.City" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Input.Country">Country:</label>
+        <input asp-for="Input.Country" class="form-control" placeholder="Enter country" />
+        <span asp-validation-for="Input.Country" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Input.StartDate">Initial Date:</label>
+        <input asp-for="Input.StartDate" type="date" class="form-control" />
+        <span asp-validation-for="Input.StartDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Input.EndDate">End Date</label>
+        <input asp-for="Input.EndDate" type="date" class="form-control" />
+        <span asp-validation-for="Input.EndDate" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+
+@if (Model.AvailableCars != null && Model.AvailableCars.Any())
+{
+    <h3>Available Cars:</h3>
+    <ul>
+        @foreach (var car in Model.AvailableCars)
+        {
+            <li>
+                @car.Model - @car.Make @car.Year - @car.LocationCity - @car.LocationCountry
+                <form method="post" asp-page-handler="Reserve" asp-route-carId="@car.CarId">
+                    <input type="hidden" name="startDate" value="@Model.Input.StartDate.ToString("yyyy-MM-dd")" />
+                    <input type="hidden" name="endDate" value="@Model.Input.EndDate.ToString("yyyy-MM-dd")" />
+                    <button type="submit" class="btn btn-success">Reserve</button>
+                </form>
+            </li>
+        }
+    </ul>
+}
+else if (Model.AvailableCars != null)
+{
+    <p>No cars available based on your search criteria.</p>
+}
