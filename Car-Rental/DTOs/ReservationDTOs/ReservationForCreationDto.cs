@@ -1,6 +1,6 @@
 ﻿using Car_Rental.Enums;
 
-namespace Car_Rental.DTOs;
+namespace Car_Rental.DTOs.ReservationDTOs;
 
 public class ReservationForCreationDto
 {

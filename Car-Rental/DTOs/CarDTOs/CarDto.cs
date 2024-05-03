@@ -1,4 +1,4 @@
-﻿namespace Car_Rental.DTOs;
+﻿namespace Car_Rental.DTOs.CarDTOs;
 
 public class CarDto
 {
