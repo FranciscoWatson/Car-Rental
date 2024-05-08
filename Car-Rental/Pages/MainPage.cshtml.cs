@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using Car_Rental.DTOs;
 using Car_Rental.DTOs.CarDTOs;
 using Car_Rental.DTOs.ReservationDTOs;
@@ -24,14 +25,8 @@ public class MainPage : PageModel
     
     [BindProperty]
     public MainPageInputModel Input { get; set; }
-    
     public IEnumerable<CarDto> AvailableCars { get; set; }
-    public IEnumerable<ReservationDto> ActiveReservations { get; set; }
-
-    public async Task OnGetAsync()
-    {
-        ActiveReservations = await _carService.GetReservationsFromUserAsync(GetCurrentUserId());
-    }
+    
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
@@ -46,9 +41,7 @@ public class MainPage : PageModel
         }
         
         AvailableCars = await _carService.GetAvailableCarsAsync(Input.City, Input.Country, Input.StartDate, Input.EndDate);
-        ActiveReservations = await _carService.GetReservationsFromUserAsync(GetCurrentUserId());
-
-
+        
         return Page();
     }
     public async Task<IActionResult> OnPostReserveAsync(int carId, DateTime startDate, DateTime endDate)
@@ -63,7 +56,6 @@ public class MainPage : PageModel
         };
 
         await _carService.ReserveCarAsync(reservationDto);
-        ActiveReservations = await _carService.GetReservationsFromUserAsync(GetCurrentUserId());
 
         return RedirectToPage();
     }
@@ -73,5 +65,4 @@ public class MainPage : PageModel
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         return int.Parse(userId ?? throw new InvalidOperationException("User ID not found in claims."));
     }
-    
 }

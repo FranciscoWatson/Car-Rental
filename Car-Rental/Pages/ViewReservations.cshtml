@@ -1,0 +1,65 @@
+﻿@page
+@model Car_Rental.Pages.ViewReservations
+<div class="mt-4">
+    <h3>Your Reservations:</h3>
+    @if (Model.ActiveReservations != null && Model.ActiveReservations.Any())
+    {
+        <div class="list-group">
+            @foreach (var reservation in Model.ActiveReservations)
+            {
+                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">@reservation.CarModel - @reservation.Location</h5>
+                        <small>@reservation.Status</small>
+                        <button type="button" class="btn btn-info" onclick="setupAndShowModal('@reservation.ReservationId', '@reservation.CarId', '@reservation.StartDate.ToString("yyyy-MM-dd")', '@reservation.EndDate.ToString("yyyy-MM-dd")')">Modify</button>
+                    </div>
+                    <p class="mb-1">From @reservation.StartDate.ToShortDateString() to @reservation.EndDate.ToShortDateString()</p>
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <p>You have no active reservations.</p>
+    }
+</div>
+
+<!-- Reservation Update Modal -->
+<div class="modal fade" id="updateReservationModal" tabindex="-1" aria-labelledby="updateReservationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateReservationModalLabel">Update Reservation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="UpdateReservation">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="UpdateReservationInputModel.ReservationId" type="hidden" id="reservationId" name="reservationId"/>
+                    <input asp-for="UpdateReservationInputModel.CarId" type="hidden" id="carId" name="CarId"/>
+                    <div class="mb-3">
+                        <label for="newStartDate" class="form-label">New Start Date</label>
+                        <input asp-for="UpdateReservationInputModel.StartDate" type="date" class="form-control" id="newStartDate" name="newStartDate" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newEndDate" class="form-label">New End Date</label>
+                        <input asp-for="UpdateReservationInputModel.EndDate" type="date" class="form-control" id="newEndDate" name="newEndDate" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function setupAndShowModal(reservationId, carId, startDate, endDate) {
+  document.getElementById('reservationId').value = reservationId;
+  document.getElementById('carId').value = carId;
+  document.getElementById('newStartDate').value = startDate;
+  document.getElementById('newEndDate').value = endDate;
+  var updateModal = new bootstrap.Modal(document.getElementById('updateReservationModal'));
+  updateModal.show();
+}
+</script>
+
