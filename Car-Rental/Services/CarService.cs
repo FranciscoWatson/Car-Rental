@@ -1,6 +1,7 @@
 ﻿using Car_Rental.DTOs;
 using Car_Rental.DTOs.CarDTOs;
 using Car_Rental.DTOs.ReservationDTOs;
+using Car_Rental.Enums;
 using Car_Rental.Models;
 using Car_Rental.Repositories;
 
@@ -62,7 +63,22 @@ public class CarService : ICarService
             Location = $"{r.Car.Location.City}, {r.Car.Location.Country}",
             StartDate = r.StartDate,
             EndDate = r.EndDate,
-            Status = r.ReservationStatus.ToString()
+            Status = r.ReservationStatus.ToString(),
+            CarId = r.CarId
         }).ToList();
+    }
+
+    public async Task UpdateReservationAsync(int reservationId, DateTime startDate, DateTime endDate, int carId, int userId)
+    {
+        var reservation = new Reservation
+        {
+            UserId = userId,
+            ReservationId = reservationId,
+            StartDate = startDate,
+            EndDate = endDate,
+            CarId = carId,
+            ReservationStatus = ReservationStatus.Reserved
+        };
+        await _reservationRepository.UpdateReservationAsync(reservation);
     }
 }
