@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
-using Car_Rental.DTOs;
+﻿using System.Security.Claims;
 using Car_Rental.DTOs.CarDTOs;
 using Car_Rental.DTOs.ReservationDTOs;
 using Car_Rental.Enums;
@@ -16,11 +14,13 @@ namespace Car_Rental.Pages;
 public class MainPage : PageModel
 {
     private readonly ICarService _carService;
+    private readonly IReservationService _reservationService;
 
     
-    public MainPage(ICarService carService)
+    public MainPage(ICarService carService, IReservationService reservationService)
     {
         _carService = carService;
+        _reservationService = reservationService;
     }
     
     [BindProperty]
@@ -55,7 +55,7 @@ public class MainPage : PageModel
             ReservationStatus = ReservationStatus.Reserved
         };
 
-        await _carService.ReserveCarAsync(reservationDto);
+        await _reservationService.ReserveCarAsync(reservationDto);
 
         return RedirectToPage();
     }

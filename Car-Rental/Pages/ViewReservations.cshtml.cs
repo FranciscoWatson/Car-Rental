@@ -11,20 +11,20 @@ namespace Car_Rental.Pages;
 [Authorize]
 public class ViewReservations : PageModel
 {
-    private readonly ICarService _carService;
+    private readonly IReservationService _reservationService;
     public IEnumerable<ReservationDto> ActiveReservations { get; set; }
     
     [BindProperty]
     public UpdateReservationInputModel UpdateReservationInputModel { get; set; }
 
-    public ViewReservations(ICarService carService)
+    public ViewReservations(IReservationService reservationService)
     {
-        _carService = carService;
+        _reservationService = reservationService;
     }
 
     public async Task OnGetAsync()
     {
-        ActiveReservations = await _carService.GetReservationsFromUserAsync(GetCurrentUserId());
+        ActiveReservations = await _reservationService.GetReservationsFromUserAsync(GetCurrentUserId());
     }
     
     private int GetCurrentUserId()
@@ -44,7 +44,7 @@ public class ViewReservations : PageModel
             ModelState.AddModelError(string.Empty, "End date cannot be earlier than start date.");
             return Page();
         }
-        await _carService.UpdateReservationAsync(reservationId, newStartDate, newEndDate, carId, GetCurrentUserId());
+        await _reservationService.UpdateReservationAsync(reservationId, newStartDate, newEndDate, carId, GetCurrentUserId());
         
         return RedirectToPage();
     }
