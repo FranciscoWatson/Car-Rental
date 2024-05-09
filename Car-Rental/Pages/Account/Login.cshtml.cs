@@ -5,17 +5,18 @@ using Car_Rental.Repositories;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using IAuthenticationService = Car_Rental.Services.IAuthenticationService;
 
 
 namespace Car_Rental.Pages;
 
 public class SignInModel : PageModel
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IAuthenticationService _authenticationService;
     
-    public SignInModel(IUserRepository userRepository)
+    public SignInModel(IAuthenticationService authenticationService)
     {
-        _userRepository = userRepository;
+        _authenticationService = authenticationService;
     }
     
     [BindProperty]
@@ -28,32 +29,14 @@ public class SignInModel : PageModel
             return Page();
         }
 
-
-        var user = await CheckCredentials(Input.Email, Input.Password);
-
-        if (user == null)
+        var result = await _authenticationService.SignInAsync(Input.Email, Input.Password);
+        
+        if (!result)
         {
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             return Page();
         }
         
-        var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
-        };
-        var identity = new ClaimsIdentity(claims, "MyCookieAuth");
-        var principal = new ClaimsPrincipal(identity);
-        
-        await HttpContext.SignInAsync("MyCookieAuth", principal);
-
         return RedirectToPage("/Index");
-    }
-
-    private async Task<User?> CheckCredentials(string email, string password)
-    {
-        var user = await _userRepository.Get(email, password);
-        return user;
     }
 }

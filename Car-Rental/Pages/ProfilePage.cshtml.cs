@@ -2,9 +2,11 @@
 using AutoMapper;
 using Car_Rental.Pages.InputModels;
 using Car_Rental.Repositories;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using IAuthenticationService = Car_Rental.Services.IAuthenticationService;
 
 namespace Car_Rental.Pages;
 
@@ -13,11 +15,13 @@ public class ProfilePage : PageModel
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
+    private readonly IAuthenticationService _authenticationService;
     
-    public ProfilePage(IUserRepository userRepository, IMapper mapper)
+    public ProfilePage(IUserRepository userRepository, IMapper mapper, IAuthenticationService authenticationService)
     {
         _userRepository = userRepository;
         _mapper = mapper;
+        _authenticationService = authenticationService;
     }
     
     [BindProperty]
@@ -49,9 +53,19 @@ public class ProfilePage : PageModel
         }
 
         _mapper.Map(Input, user);
-        await _userRepository.UpdateUserAsync(user);
+        try
+        {
+            await _userRepository.UpdateUserAsync(user);
+            
+            await _authenticationService.RefreshUserClaimsAsync(user);
 
-        return RedirectToPage();
+            return RedirectToPage(); 
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError("", "Failed to update user. Please try again.");
+            return Page();
+        }
     }
     
     private string GetCurrentUserEmail()
