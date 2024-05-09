@@ -1,5 +1,10 @@
 ﻿@page
 @model Car_Rental.Pages.ViewReservations
+
+@{
+    ViewData["Title"] = "Reservations";
+}
+
 <div class="mt-4">
     <h3>Your Reservations:</h3>
     @if (Model.ActiveReservations != null && Model.ActiveReservations.Any())
