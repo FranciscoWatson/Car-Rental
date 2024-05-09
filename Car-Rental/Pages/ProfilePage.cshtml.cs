@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using AutoMapper;
 using Car_Rental.Pages.InputModels;
 using Car_Rental.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -11,10 +12,12 @@ namespace Car_Rental.Pages;
 public class ProfilePage : PageModel
 {
     private readonly IUserRepository _userRepository;
+    private readonly IMapper _mapper;
     
-    public ProfilePage(IUserRepository userRepository)
+    public ProfilePage(IUserRepository userRepository, IMapper mapper)
     {
         _userRepository = userRepository;
+        _mapper = mapper;
     }
     
     [BindProperty]
@@ -23,19 +26,13 @@ public class ProfilePage : PageModel
     public async Task<IActionResult> OnGetAsync()
     {
         var user = await _userRepository.GetUserByEmailAsync(GetCurrentUserEmail());
-
-        Input = new UserUpdateInputModel()
+        if (user == null)
         {
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            PhoneNumber = user.PhoneNumber,
-            AddressOne = user.AddressOne,
-            AddressTwo = user.AddressTwo,
-            City = user.City,
-            Country = user.Country,
-            LicenseNumber = user.LicenseNumber
-        };
+            return NotFound("User not found.");
+        }
 
+        Input = _mapper.Map<UserUpdateInputModel>(user);
+        
         return Page();
     }
     public async Task<IActionResult> OnPostAsync()
@@ -46,16 +43,12 @@ public class ProfilePage : PageModel
         }
 
         var user = await _userRepository.GetUserByEmailAsync(GetCurrentUserEmail());
+        if (user == null)
+        {
+            return NotFound("User not found.");
+        }
 
-        user.FirstName = Input.FirstName;
-        user.LastName = Input.LastName;
-        user.PhoneNumber = Input.PhoneNumber;
-        user.AddressOne = Input.AddressOne;
-        user.AddressTwo = Input.AddressTwo;
-        user.City = Input.City;
-        user.Country = Input.Country;
-        user.LicenseNumber = Input.LicenseNumber;
-        
+        _mapper.Map(Input, user);
         await _userRepository.UpdateUserAsync(user);
 
         return RedirectToPage();
