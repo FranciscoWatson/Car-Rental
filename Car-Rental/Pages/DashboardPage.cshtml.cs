@@ -11,13 +11,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace Car_Rental.Pages;
 
 [Authorize]
-public class MainPage : PageModel
+public class DashboardPage : PageModel
 {
     private readonly ICarService _carService;
     private readonly IReservationService _reservationService;
 
     
-    public MainPage(ICarService carService, IReservationService reservationService)
+    public DashboardPage(ICarService carService, IReservationService reservationService)
     {
         _carService = carService;
         _reservationService = reservationService;
