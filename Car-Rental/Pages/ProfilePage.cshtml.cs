@@ -26,10 +26,14 @@ public class ProfilePage : PageModel
 
         Input = new UserUpdateInputModel()
         {
-            Email = user.Email,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            PhoneNumber = user.PhoneNumber
+            PhoneNumber = user.PhoneNumber,
+            AddressOne = user.AddressOne,
+            AddressTwo = user.AddressTwo,
+            City = user.City,
+            Country = user.Country,
+            LicenseNumber = user.LicenseNumber
         };
 
         return Page();
@@ -43,10 +47,14 @@ public class ProfilePage : PageModel
 
         var user = await _userRepository.GetUserByEmailAsync(GetCurrentUserEmail());
 
-        user.Email = Input.Email;
         user.FirstName = Input.FirstName;
         user.LastName = Input.LastName;
         user.PhoneNumber = Input.PhoneNumber;
+        user.AddressOne = Input.AddressOne;
+        user.AddressTwo = Input.AddressTwo;
+        user.City = Input.City;
+        user.Country = Input.Country;
+        user.LicenseNumber = Input.LicenseNumber;
         
         await _userRepository.UpdateUserAsync(user);
 
