@@ -11,9 +11,10 @@
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container">
-            <a class="navbar-brand" asp-area="" asp-page="/Index">Car_Rental</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        
+        <div class="container"> 
+            <a class="navbar-brand" asp-area="" asp-page="/Index">Car-Rental</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -24,21 +25,18 @@
                         <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/MainPage">MainPage</a>
+                        <a class="nav-link text-dark" asp-area="" asp-page="/MainPage">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/ViewReservations">View Reservations</a>
+                        <a class="nav-link text-dark" asp-area="" asp-page="/ViewReservations">Reservations</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-page="/ProfilePage">Profile</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                    </li>
                 </ul>
             </div>
             <div class="mr-2">
-                <partial name="_LoginStatusPartial" />
+                <partial name="_LoginStatusPartial"/>
             </div>
         </div>
     </nav>
@@ -51,7 +49,7 @@
 
 <footer class="border-top footer text-muted">
     <div class="container">
-        &copy; 2024 - Car_Rental - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        &copy; 2024 - Car-Rental - Francisco Watson - FootHill Technology Solutions
     </div>
 </footer>
 
