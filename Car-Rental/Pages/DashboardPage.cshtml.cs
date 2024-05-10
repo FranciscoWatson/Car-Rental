@@ -7,6 +7,7 @@ using Car_Rental.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Car_Rental.Pages;
 
@@ -15,20 +16,43 @@ public class DashboardPage : PageModel
 {
     private readonly ICarService _carService;
     private readonly IReservationService _reservationService;
+    private readonly ILocationService _locationService;
 
-    
-    public DashboardPage(ICarService carService, IReservationService reservationService)
+    public List<SelectListItem> Countries { get; set; } = new List<SelectListItem>();
+    public List<SelectListItem> Cities { get; set; } = new List<SelectListItem>();
+    public DashboardPage(ICarService carService, IReservationService reservationService, ILocationService locationService)
     {
         _carService = carService;
         _reservationService = reservationService;
+        _locationService = locationService;
     }
     
     [BindProperty]
     public MainPageInputModel Input { get; set; }
     public IEnumerable<CarDto> AvailableCars { get; set; }
     
+    public async Task OnGetAsync()
+    {
+        Countries = await _locationService.GetCountriesAsync();
+        Cities = new List<SelectListItem>();
+    }
+    
+    public async Task<IActionResult> OnGetCitiesAsync(string country)
+    {
+        Cities = await _locationService.GetCitiesByCountryAsync(country);
+        return new JsonResult(Cities);
+    }
+    
+        private async Task LoadCitiesAndCountriesAsync()
+    {
+        Countries = await _locationService.GetCountriesAsync();
+        Cities = !string.IsNullOrEmpty(Input.Country) ? await _locationService.GetCitiesByCountryAsync(Input.Country) : new List<SelectListItem>();
+    }
+    
     public async Task<IActionResult> OnPostAsync()
     {
+        await LoadCitiesAndCountriesAsync();
+        
         if (!ModelState.IsValid)
         {
             return Page();
@@ -56,6 +80,8 @@ public class DashboardPage : PageModel
         };
 
         await _reservationService.ReserveCarAsync(reservationDto);
+
+        await LoadCitiesAndCountriesAsync();
 
         return RedirectToPage();
     }
