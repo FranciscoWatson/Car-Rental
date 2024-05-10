@@ -15,3 +15,12 @@ function updateCities() {
             });
         });
 }
+
+function setupAndShowModal(reservationId, carId, startDate, endDate) {
+    document.getElementById('reservationId').value = reservationId;
+    document.getElementById('carId').value = carId;
+    document.getElementById('newStartDate').value = startDate;
+    document.getElementById('newEndDate').value = endDate;
+    var updateModal = new bootstrap.Modal(document.getElementById('updateReservationModal'));
+    updateModal.show();
+}
