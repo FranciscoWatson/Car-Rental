@@ -9,4 +9,7 @@ public interface ILocationRepository
     Task CreateLocationAsync(Location location);
     Task UpdateLocationAsync(Location location);
     Task DeleteLocationAsync(int locationId);
+    Task<IEnumerable<string>> GetCountriesAsync();
+    Task<IEnumerable<string>> GetCitiesByCountryAsync(string country);
+
 }

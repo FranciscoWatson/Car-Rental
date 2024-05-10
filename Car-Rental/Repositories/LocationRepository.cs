@@ -43,4 +43,23 @@ public class LocationRepository : ILocationRepository
             await _carRentalDbContext.SaveChangesAsync();
         }
     }
+    
+    public async Task<IEnumerable<string>> GetCitiesByCountryAsync(string country)
+    {
+        return await _carRentalDbContext.Locations
+            .Where(l => l.Country == country)
+            .OrderBy(x => x.City)
+            .Select(x => x.City)
+            .Distinct()
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<string>> GetCountriesAsync()
+    {
+        return await _carRentalDbContext.Locations
+            .OrderBy(x => x.Country)
+            .Select(x => x.Country)
+            .Distinct()
+            .ToListAsync();
+    }
 }
